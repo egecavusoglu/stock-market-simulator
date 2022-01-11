@@ -4,6 +4,9 @@ Launch your stock exchange API within your computer. Develop your trading algori
 
 Todo items:
 
+- [ ] CLI: Verbose flag to print tickers
+- [ ] CLI: Get number of tickers
+- [ ] CLI: Get initial tickers from json (with initial ticker names and initial price) Stock {"$NAME", 120.0}
 - [ ] Emit data on websocket server
 - [ ] Rest Endpoint: give individual stock data
 - [ ] Rest Endpoint: give all stock names
