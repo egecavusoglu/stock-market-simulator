@@ -15,6 +15,7 @@ Project Roadmap:
 - [x] CLI: Verbose flag to print tickers
 - [x] CLI: Get number of tickers
 - [ ] CLI: Get initial tickers from json (with initial ticker names and initial price) Stock {"$NAME", 120.0}
+- [ ] Write cli flags docs.
 - [x] Emit data on websocket server
 - [x] Rest Endpoint: give individual stock data
 - [x] Rest Endpoint: give all stock names
