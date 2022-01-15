@@ -18,5 +18,5 @@ Project Roadmap:
 - [x] Emit data on websocket server
 - [x] Rest Endpoint: give individual stock data
 - [x] Rest Endpoint: give all stock names
-- [ ] Configure CI/CD Release
+- [x] Configure CI/CD Release
 - [ ] Deploy as Homebrew tap
