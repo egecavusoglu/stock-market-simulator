@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"flag"
 	"fmt"
 	"log"
 	"math/rand"
@@ -19,14 +20,19 @@ var upgrader = websocket.Upgrader{}
 var timeTicker  *time.Ticker
 
 func main(){
+	// Program flags
+	seedPtr := flag.Int64("seed", time.Now().UnixNano(), "Initialize pseudo random sequence with a specific seed. Defaults to unix time.")
+	verbosePts := flag.Bool("verbose", false, "In verbose mode, tick events will be printed out to standart output. Defaults to false.")
+	tickerCount := flag.Int("count", 3, "Number of stock tickers you would like to generate. Defaults to 3.")
+	flag.Parse()
 	// Initial setup
-	rand.Seed(time.Now().UnixNano())
+	rand.Seed(*seedPtr)
 	timeTicker = time.NewTicker(time.Second)
-	stocks = generateStocks(4) // generate the stock market tickers
+	stocks = generateStocks(*tickerCount) // generate the stock market tickers
 	
 	
 	// Handle tickers in a go routine each second
-	go registerTicker(timeTicker, false)
+	go registerTicker(timeTicker, *verbosePts)
 
 	// Register server endpoints
 	router := mux.NewRouter()
