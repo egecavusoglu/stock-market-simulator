@@ -1,6 +1,6 @@
 # Stock Market Simulator
 
-Launch your stock exchange server and API in your local. Develop your trading algorithms without with ease.
+Launch your stock exchange server and API in your local. Develop your trading algorithms with ease.
 
 You can consume the stock market HTTP server via REST and websocket.
 
