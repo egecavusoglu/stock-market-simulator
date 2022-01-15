@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/fatih/color"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
 )
@@ -22,6 +23,7 @@ var upgrader = websocket.Upgrader{}
 var timeTicker  *time.Ticker
 
 func main(){
+	writeWelcomeMessage()
 	// Program flags
 	seedPtr := flag.Int64("seed", time.Now().UnixNano(), "Initialize pseudo random sequence with a specific seed. Defaults to unix time.")
 	verbosePts := flag.Bool("verbose", false, "In verbose mode, tick events will be printed out to standart output. Defaults to false.")
@@ -38,11 +40,15 @@ func main(){
 	go registerTicker(timeTicker, *verbosePts)
 
 	// Register server endpoints
+	port := strconv.Itoa(*portPtr)
 	router := mux.NewRouter()
+	router.HandleFunc("/", getStocksHandler) // REST: Get all stocks in a REST endpoint
 	router.HandleFunc("/stocks", getStocksHandler) // REST: Get all stocks in a REST endpoint
 	router.HandleFunc("/stocks/live", publishStocksHandler) // WS: Get stocks data over websocket
 	router.HandleFunc("/stocks/{name}", getStockHandler) // REST: Get specific stock data
-	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(*portPtr), router))
+	color.Green("Server is live on http://localhost:" + port)
+	log.Fatal(http.ListenAndServe(":"+port, router))
+	
 }
 
 // Types and enums
@@ -61,10 +67,22 @@ const  (
 
 // Functions
 
+func writeWelcomeMessage(){
+	fmt.Println(
+	color.CyanString("\nWelcome to stock-market-simulator!"),
+	`
+
+HTTP Server endpoints:
+	GET / : Get all stocks data
+	GET /stocks : Get all stocks data
+	GET /stocks/{symbol} : Get specific stock's data
+	WEBSOCKET /stocks/live : Get stocks data over websocket.
+	`)
+}
+
 func generateStock() Stock{
 	name := generateStockName()
 	initialPrice := generateInitialPrice()
-	fmt.Println(initialPrice)
 	s := Stock{name, initialPrice}
 	return s
 }
