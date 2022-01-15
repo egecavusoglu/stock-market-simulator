@@ -8,6 +8,7 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -15,6 +16,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+// globals
 var stocks map[string]*Stock
 var upgrader = websocket.Upgrader{}
 var timeTicker  *time.Ticker
@@ -23,13 +25,14 @@ func main(){
 	// Program flags
 	seedPtr := flag.Int64("seed", time.Now().UnixNano(), "Initialize pseudo random sequence with a specific seed. Defaults to unix time.")
 	verbosePts := flag.Bool("verbose", false, "In verbose mode, tick events will be printed out to standart output. Defaults to false.")
-	tickerCount := flag.Int("count", 3, "Number of stock tickers you would like to generate. Defaults to 3.")
+	tickerCountPtr := flag.Int("count", 3, "Number of stock tickers you would like to generate. Defaults to 3.")
+	portPtr := flag.Int("port", 8080, "Port number http server is launched on. Defaults to 8080.")
 	flag.Parse()
+
 	// Initial setup
 	rand.Seed(*seedPtr)
 	timeTicker = time.NewTicker(time.Second)
-	stocks = generateStocks(*tickerCount) // generate the stock market tickers
-	
+	stocks = generateStocks(*tickerCountPtr) // generate the stock market tickers
 	
 	// Handle tickers in a go routine each second
 	go registerTicker(timeTicker, *verbosePts)
@@ -37,11 +40,9 @@ func main(){
 	// Register server endpoints
 	router := mux.NewRouter()
 	router.HandleFunc("/stocks", getStocksHandler) // REST: Get all stocks in a REST endpoint
-	router.HandleFunc("/stocks/live", publishStocksHandler) // WS: Publish stock data on websocket
+	router.HandleFunc("/stocks/live", publishStocksHandler) // WS: Get stocks data over websocket
 	router.HandleFunc("/stocks/{name}", getStockHandler) // REST: Get specific stock data
-
-	log.Fatal(http.ListenAndServe(":8080", router))
-	
+	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(*portPtr), router))
 }
 
 // Types and enums
