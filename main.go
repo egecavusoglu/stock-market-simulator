@@ -31,7 +31,6 @@ func main(){
 	portPtr := flag.Int("port", 8080, "Port number http server is launched on. Defaults to 8080.")
 	flag.Parse()
 
-	
 	// Initial setup
 	rand.Seed(*seedPtr)
 	timeTicker = time.NewTicker(time.Second)
