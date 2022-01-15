@@ -26,7 +26,7 @@ func main(){
 	writeWelcomeMessage()
 	// Program flags
 	seedPtr := flag.Int64("seed", time.Now().UnixNano(), "Initialize pseudo random sequence with a specific seed. Defaults to unix time.")
-	verbosePts := flag.Bool("verbose", false, "In verbose mode, tick events will be printed out to standart output. Defaults to false.")
+	verbosePtr := flag.Bool("verbose", false, "In verbose mode, tick events will be printed out to standart output. Defaults to false.")
 	tickerCountPtr := flag.Int("count", 3, "Number of stock tickers you would like to generate. Defaults to 3.")
 	portPtr := flag.Int("port", 8080, "Port number http server is launched on. Defaults to 8080.")
 	flag.Parse()
@@ -37,7 +37,7 @@ func main(){
 	stocks = generateStocks(*tickerCountPtr) // generate the stock market tickers
 	
 	// Handle tickers in a go routine each second
-	go registerTicker(timeTicker, *verbosePts)
+	go registerTicker(timeTicker, *verbosePtr)
 
 	// Register server endpoints
 	port := strconv.Itoa(*portPtr)
