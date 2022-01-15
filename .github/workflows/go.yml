@@ -2,8 +2,6 @@ name: Release Go App
 
 on:
   push:
-    branches:
-      - main
     tags:
       - "*" # triggers only if push new tag version, like `0.8.4` or else
 
