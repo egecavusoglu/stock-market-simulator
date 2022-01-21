@@ -16,11 +16,12 @@ This binary runs a simulated stock market based on randomized numbers, updating 
 - `verbose` (Bool): In verbose mode, tick events will be printed out to standart output. Defaults to false.
 - `count` (Int): Number of stock tickers you would like to generate. Defaults to 3.
 - `port` (Int): Port number http server is launched on. Defaults to 8080.
+- `ticker-file` (String): Point to a local file to initialize ticker names and prices. See example [file](./files/tickers.json).
 
-Example usage
+  Example usage
 
 ```console
-./stock-market-simulator -seed 2 -verbose=true -count 12 -port 8081
+./stock-market-simulator -seed 2 -verbose=true -count 12 -port 8081 -ticker-file ./files/tickers.json
 ```
 
 ## Consuming the API
@@ -41,7 +42,7 @@ You can consume the stock market HTTP server via REST and websocket.
 - [x] Rest Endpoint: give individual stock data
 - [x] Rest Endpoint: give all stock names
 - [x] Configure CI/CD Release
-- [ ] CLI: Get initial tickers from json (with initial ticker names and initial price) Stock {"$NAME", 120.0}
+- [x] CLI: Get initial tickers from json (with initial ticker names and initial price) Stock {"$NAME", 120.0}
 - [x] Write `How to use` docs, explain flags.
 - [ ] Include contributing guide. (Env setup, dependencies, testing...)
 - [ ] Deploy as Homebrew tap

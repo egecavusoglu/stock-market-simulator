@@ -1,9 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"math/rand"
+	"os"
 	"strings"
 	"time"
 )
@@ -24,17 +27,24 @@ const  (
 
 // Functions
 
-func generateStock() Stock{
+func generateRandomStock() Stock{
 	name := generateStockName()
 	initialPrice := generateInitialPrice()
 	s := Stock{name, initialPrice}
 	return s
 }
 
-func generateStocks(num  int) map[string]*Stock {
+func generateStocks(num  int, filepath string) map[string]*Stock {
+
+	// tickers are parsed from the file specified.
+	if (filepath != ""){
+		parsed := parseTickersFromJson(filepath)
+		return parsed
+	}
+
 	stocks := make(map[string]*Stock)	
 	for i := 0; i < num; i ++ {
-		stock := generateStock()
+		stock := generateRandomStock()
 		stocks[stock.Name] = &stock
 	}
 	return stocks
@@ -85,10 +95,10 @@ func getStock(ticker string) (*Stock, error){
 
 
 func tick(stock *Stock, verbose bool){
-	updateStockPrice(stock)
 	if (verbose){
 		fmt.Println(stock.Name, stock.Price)
 	}
+	updateStockPrice(stock)
 }
 
 func registerTicker(ticker *time.Ticker, verbose bool){
@@ -100,4 +110,27 @@ func registerTicker(ticker *time.Ticker, verbose bool){
 			fmt.Println()
 		}
 	}	
+}
+
+func parseTickersFromJson(filepath string) map[string]*Stock{
+	jsonFile, err := os.Open(filepath)
+	
+	if (err != nil){
+		// return nil, errors.New("JSON file at `" + filepath + "` cannot be parsed.")
+		panic("JSON file at `" + filepath + "` cannot be parsed.")
+	}
+	defer jsonFile.Close()
+
+	byteValue, _ := ioutil.ReadAll(jsonFile)
+	var parsedStocks []Stock
+	json.Unmarshal(byteValue, &parsedStocks)
+	
+	stockMap := make(map[string]*Stock)
+
+	for _, stock := range(parsedStocks){
+		s := Stock{Name: stock.Name, Price: stock.Price}
+		stockMap[s.Name] = &s
+	}
+	
+	return stockMap
 }
